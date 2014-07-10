@@ -2,7 +2,7 @@
 
 import re
 
-def exploderise(roman_numeral):
+def compressurise(roman_numeral):
 	
 	roman_numeral = roman_numeral.upper()
 	
@@ -15,6 +15,6 @@ def exploderise(roman_numeral):
 	conversion["CM"] = "DCCCC"
 	
 	for key in conversion:
-		roman_numeral = re.sub(key, conversion[key], roman_numeral)
+		roman_numeral = re.sub(conversion[key], key, roman_numeral)
 
 	return roman_numeral	
