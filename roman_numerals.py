@@ -17,10 +17,11 @@ def subtract(a, b):
 	letters.sort(key=lambda c: values[c])
 	for i, l in enumerate(letters):
 		if c[l] < 0:
-			c.subtract(Counter({l:-4+c[l], letters[i+1]:1}))
+			print(c[l])
+			c.subtract(Counter({l:-5, letters[i+1]:1}))
 			print(str(c))
 
 	print(str(c))
 	print(sort_num(c.elements()))
 
-subtract("M", "I")
+subtract("M", "IV")
