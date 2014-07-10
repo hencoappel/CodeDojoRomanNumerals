@@ -4,7 +4,6 @@ from exploderise import exploderise
 
 values = {'M':1000,'D':500,'C':100,'L':50,'X':10,'V':5,'I':1}
 
-<<<<<<< HEAD
 multi_table = {}
 multi_table["I":{"I":"I","V":"V","X":"X","L":"L","C":"C","D":"D"}]
 multi_table["V":{"I":"V","V":"XXV","X":"L","L":"CCL","C":"D","D":"MMD"}]
@@ -15,6 +14,8 @@ multi_table["D":{"I":"D","V":"MMD","X":"MMMMM"}]
 
 def sort_num(a, rev=True):
 	return "".join(sorted(a, key=lambda c: values[c], reverse=rev))
+
+sorter = lambda c: values[c]
 
 def subtract(a, b):
 	a = exploderise(a)
@@ -35,8 +36,48 @@ def subtract(a, b):
 def multiply(a, b):
 	a = exploderise(a)
 	b = exploderise(b)
-	for(c1 in a):
-		for(c2 in b):
+	for c1 in a:
+		for c2 in b:
 			c.append(multitable[a][b])
 	print(c)
+
 subtract("M", "I")
+
+#subtract("M", "I")
+
+#print("".join(sorted(num, key=sorter, reverse=True)))
+
+def combine(string):
+	string = string[::-1]
+	replaces = [
+		['IIIII', 'V'],
+		['VV', 'X'],
+		['XXXXX', 'L'],
+		['LL', 'C'],
+		['CCCCC', 'D'],
+		['DD', 'M']
+	]
+
+	previous_length = 0
+
+	for replace in replaces:
+		while previous_length != len(string):
+			previous_length = len(string)
+			string = string.replace(*replace)
+		previous_length = 0
+
+	return string[::-1]
+
+
+def add(a, b):
+	combination = a + b
+
+	reversed_sorted_combination = "".join(sorted(combination, key=sorter, reverse=False))
+
+	print(reversed_sorted_combination)
+
+	combined = combine(reversed_sorted_combination)
+
+	return combined
+
+print(add("CCCLXVIIII", "DCCCXXXXV"))
