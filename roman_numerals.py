@@ -48,8 +48,8 @@ def subtract(a, b):
 	letters.sort(key=lambda c: values[c])
 	for i, l in enumerate(letters):
 		if c[l] < 0:
-			if letters[i] == 'X':
-				c.subtract(Counter({l:-5, letters[i+1]:1}))
+			if letters[i] == 'V':
+				c.subtract(Counter({l:-2, letters[i+1]:1}))
 			else:
 				c.subtract(Counter({l:-5, letters[i+1]:1}))
 	print(sort_num(c.elements()))
@@ -68,6 +68,8 @@ def multiply(a, b):
 
 
 def add(a, b):
+	a = exploderise(a)
+	b = exploderise(b)
 	combination = a + b
 
 	reversed_sorted_combination = "".join(sorted(combination, key=sorter, reverse=False))
@@ -76,6 +78,7 @@ def add(a, b):
 
 	combined = combine(reversed_sorted_combination)
 
-	return combined
+	comine.reverse()
+	return compressurise(combined)
 
 print(add("CCCLXVIIII", "DCCCXXXXV"))
