@@ -12,9 +12,10 @@ values = {'M':1000,'D':500,'C':100,'L':50,'X':10,'V':5,'I':1}
 #multi_table["L":{"I":"L","V":"CCL","X":"D","L":"MMD","C":"MMMMM"}]
 #multi_table["C":{"I":"C","V":"D","X":"M","L":"MMMMM"}]
 #multi_table["D":{"I":"D","V":"MMD","X":"MMMMM"}]
-
 def sort_num(a, rev=True):
 	return "".join(sorted(a, key=lambda c: values[c], reverse=rev))
+
+sorter = lambda c: values[c]
 
 def subtract(a, b):
 	a = exploderise(a)
@@ -27,7 +28,7 @@ def subtract(a, b):
 		if c[l] < 0:
 			c.subtract(Counter({l:-5, letters[i+1]:1}))
 	print(sort_num(c.elements()))
-	return compressurise(sort_num(c.elements()))
+	return compressurise(combine(sort_num(c.elements())))
 a = raw_input("Num one:")
 b = raw_input("Num two:")
 print(subtract(a, b))
@@ -39,3 +40,39 @@ def multiply(a, b):
 		for c2 in b:
 			c.append(multitable[a][b])
 	print(c)
+
+
+def combine(string):
+	string = string[::-1]
+	replaces = [
+		['IIIII', 'V'],
+		['VV', 'X'],
+		['XXXXX', 'L'],
+		['LL', 'C'],
+		['CCCCC', 'D'],
+		['DD', 'M']
+	]
+
+	previous_length = 0
+
+	for replace in replaces:
+		while previous_length != len(string):
+			previous_length = len(string)
+			string = string.replace(*replace)
+		previous_length = 0
+
+	return string[::-1]
+
+
+def add(a, b):
+	combination = a + b
+
+	reversed_sorted_combination = "".join(sorted(combination, key=sorter, reverse=False))
+
+	print(reversed_sorted_combination)
+
+	combined = combine(reversed_sorted_combination)
+
+	return combined
+
+print(add("CCCLXVIIII", "DCCCXXXXV"))
