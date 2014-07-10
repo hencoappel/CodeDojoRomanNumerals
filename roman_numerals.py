@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
+import re
+
 from collections import Counter
 from exploderise import exploderise
 from compressurise import compressurise
+
 
 values = {'M':1000,'D':500,'C':100,'L':50,'X':10,'V':5,'I':1}
 
@@ -12,10 +15,11 @@ values = {'M':1000,'D':500,'C':100,'L':50,'X':10,'V':5,'I':1}
 #multi_table["L":{"I":"L","V":"CCL","X":"D","L":"MMD","C":"MMMMM"}]
 #multi_table["C":{"I":"C","V":"D","X":"M","L":"MMMMM"}]
 #multi_table["D":{"I":"D","V":"MMD","X":"MMMMM"}]
-def sort_num(a, rev=True):
-	return "".join(sorted(a, key=lambda c: values[c], reverse=rev))
 
-sorter = lambda c: values[c]
+def sorter(c): values[c]
+
+def sort_num(a, rev=True):
+	return "".join(sorted(a, key=sorter, reverse=rev))
 
 def combine(string):
 	string = string[::-1]
@@ -27,58 +31,61 @@ def combine(string):
 		['CCCCC', 'D'],
 		['DD', 'M']
 	]
-
 	previous_length = 0
-
 	for replace in replaces:
 		while previous_length != len(string):
 			previous_length = len(string)
 			string = string.replace(*replace)
 		previous_length = 0
-
 	return string[::-1]
 
+class RomanNumeral():
 
-def subtract(a, b):
-	a = exploderise(a)
-	b = exploderise(b)
-	c = Counter(a)
-	c.subtract(Counter(b))
-	letters = values.keys()
-	letters.sort(key=lambda c: values[c])
-	for i, l in enumerate(letters):
-		if c[l] < 0:
-			if letters[i] == 'V':
-				c.subtract(Counter({l:-2, letters[i+1]:1}))
-			else:
-				c.subtract(Counter({l:-5, letters[i+1]:1}))
-	print(sort_num(c.elements()))
-	return compressurise(combine(sort_num(c.elements())))
-a = raw_input("Num one:")
-b = raw_input("Num two:")
-print(subtract(a, b))
+	def __init__(self, num):
+		self.num = num
 
-def multiply(a, b):
-	a = exploderise(a)
-	b = exploderise(b)
-	for c1 in a:
-		for c2 in b:
-			c.append(multitable[a][b])
-#	print(c)
+	def __sub__(self, other):
+		num1 = exploderise(self.num)
+		num2 = exploderise(other.num)
+		c = Counter(num1)
+		c.subtract(Counter(num2))
+		letters = values.keys()
+		letters.sort(key=sorter)
+		for i, l in enumerate(letters):
+			if c[l] < 0:
+				if l == 'V':
+					c.subtract(Counter({l:-2, letters[i+1]:1}))
+				else:
+					c.subtract(Counter({l:-5, letters[i+1]:1}))
+		expanded_number = sort_num(c.elements())
+		corrected_number = compressurise(combine(expanded_number))
+		return RomanNumeral(corrected_number)
+
+	def multiply(a, b):
+		a = exploderise(a)
+		b = exploderise(b)
+		for c1 in a:
+			for c2 in b:
+				c.append(multitable[a][b])
 
 
-def add(a, b):
-	a = exploderise(a)
-	b = exploderise(b)
-	combination = a + b
+	def __add__(self, other):
+		num1 = exploderise(self.num)
+		num2 = exploderise(other.num)
+		combination = num1 + num2
+		reversed_sorted_combination = sort_num(combination, rev=False)
+		combined = combine(reversed_sorted_combination)
+		combined[::-1]
+		return RomanNumeral(compressurise(combined))
 
-	reversed_sorted_combination = "".join(sorted(combination, key=sorter, reverse=False))
-
-#	print(reversed_sorted_combination)
-
-	combined = combine(reversed_sorted_combination)
-
-	comine.reverse()
-	return compressurise(combined)
-
-print(add("CCCLXVIIII", "DCCCXXXXV"))
+	def __str__(self):
+		return self.num
+if __name__ == "__main__":
+	inp = raw_input("Write a simple Roman numeral addition or subtraction:\n")
+	s = re.split("\\s+", inp)
+	print(s)
+	a = RomanNumeral(s[0])
+	b = RomanNumeral(s[2])
+	op = s[1]
+	val = eval("a " + op + " b")
+	print(val)
