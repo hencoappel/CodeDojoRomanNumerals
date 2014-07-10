@@ -17,31 +17,6 @@ def sort_num(a, rev=True):
 
 sorter = lambda c: values[c]
 
-def subtract(a, b):
-	a = exploderise(a)
-	b = exploderise(b)
-	c = Counter(a)
-	c.subtract(Counter(b))
-	letters = values.keys()
-	letters.sort(key=lambda c: values[c])
-	for i, l in enumerate(letters):
-		if c[l] < 0:
-			c.subtract(Counter({l:-5, letters[i+1]:1}))
-	print(sort_num(c.elements()))
-	return compressurise(combine(sort_num(c.elements())))
-a = raw_input("Num one:")
-b = raw_input("Num two:")
-print(subtract(a, b))
-
-def multiply(a, b):
-	a = exploderise(a)
-	b = exploderise(b)
-	for c1 in a:
-		for c2 in b:
-			c.append(multitable[a][b])
-	print(c)
-
-
 def combine(string):
 	string = string[::-1]
 	replaces = [
@@ -64,12 +39,40 @@ def combine(string):
 	return string[::-1]
 
 
+def subtract(a, b):
+	a = exploderise(a)
+	b = exploderise(b)
+	c = Counter(a)
+	c.subtract(Counter(b))
+	letters = values.keys()
+	letters.sort(key=lambda c: values[c])
+	for i, l in enumerate(letters):
+		if c[l] < 0:
+			if letters[i] == 'X':
+				c.subtract(Counter({l:-5, letters[i+1]:1}))
+			else:
+				c.subtract(Counter({l:-5, letters[i+1]:1}))
+	print(sort_num(c.elements()))
+	return compressurise(combine(sort_num(c.elements())))
+a = raw_input("Num one:")
+b = raw_input("Num two:")
+print(subtract(a, b))
+
+def multiply(a, b):
+	a = exploderise(a)
+	b = exploderise(b)
+	for c1 in a:
+		for c2 in b:
+			c.append(multitable[a][b])
+#	print(c)
+
+
 def add(a, b):
 	combination = a + b
 
 	reversed_sorted_combination = "".join(sorted(combination, key=sorter, reverse=False))
 
-	print(reversed_sorted_combination)
+#	print(reversed_sorted_combination)
 
 	combined = combine(reversed_sorted_combination)
 
