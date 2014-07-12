@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import re
+import sys
 
 from collections import Counter
 from exploderise import exploderise
@@ -16,7 +17,7 @@ values = {'M':1000,'D':500,'C':100,'L':50,'X':10,'V':5,'I':1}
 #multi_table["C":{"I":"C","V":"D","X":"M","L":"MMMMM"}]
 #multi_table["D":{"I":"D","V":"MMD","X":"MMMMM"}]
 
-def sorter(c): values[c]
+def sorter(c): return values[c]
 
 def sort_num(a, rev=True):
 	return "".join(sorted(a, key=sorter, reverse=rev))
@@ -49,8 +50,7 @@ class RomanNumeral():
 		num2 = exploderise(other.num)
 		c = Counter(num1)
 		c.subtract(Counter(num2))
-		letters = values.keys()
-		letters.sort(key=sorter)
+		letters = sorted(values.keys(), key=sorter)
 		for i, l in enumerate(letters):
 			if c[l] < 0:
 				if l == 'V':
@@ -80,12 +80,12 @@ class RomanNumeral():
 
 	def __str__(self):
 		return self.num
+
 if __name__ == "__main__":
-	inp = raw_input("Write a simple Roman numeral addition or subtraction:\n")
-	s = re.split("\\s+", inp)
-	print(s)
-	a = RomanNumeral(s[0])
-	b = RomanNumeral(s[2])
-	op = s[1]
+	if not len(sys.argv) == 4:
+		print("Put the equation as arguments to the program.")
+	a = RomanNumeral(sys.argv[1])
+	b = RomanNumeral(sys.argv[3])
+	op = sys.argv[2]
 	val = eval("a " + op + " b")
 	print(val)
